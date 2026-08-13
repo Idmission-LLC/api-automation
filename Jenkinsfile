@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    options {
+        buildDiscarder(logRotator(daysToKeepStr: '15', artifactDaysToKeepStr: '15'))
+    }
+
     tools {
         nodejs 'NodeJS' // Make sure the name matches what you configure in Jenkins -> Tools
     }
