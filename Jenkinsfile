@@ -1,0 +1,103 @@
+pipeline {
+    agent any
+
+    parameters {
+        choice(name: 'ENVIRONMENT', choices: ['DEV', 'QA', 'UAT', 'PROD'], description: 'Target environment')
+        choice(name: 'TEST_SUITE', choices: ['ALL', 'SMOKE', 'REGRESSION', 'CRITICAL'], description: 'Test suite to run')
+        booleanParam(name: 'NOTIFY_SLACK', defaultValue: true, description: 'Send Slack Notification?')
+        booleanParam(name: 'NOTIFY_EMAIL', defaultValue: true, description: 'Send Email Notification?')
+    }
+
+    environment {
+        ENV = "${params.ENVIRONMENT}"
+        
+        // Fetch credentials from Jenkins (Replace the credential IDs with your actual Jenkins credential IDs)
+        API_USERNAME = credentials('api-username')
+        API_PASSWORD = credentials('api-password')
+        API_CLIENT_ID = credentials('api-client-id')
+        API_CLIENT_SECRET = credentials('api-client-secret')
+        
+        // SLACK_WEBHOOK_URL = credentials('slack-webhook-url')
+        // SMTP_PASSWORD = credentials('smtp-password')
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                sh 'npm install'
+                sh 'npx playwright install --with-deps'
+            }
+        }
+
+        stage('Validate Configuration') {
+            steps {
+                echo "Running API Tests against ${env.ENV} environment..."
+                sh 'node -v'
+                sh 'npm -v'
+            }
+        }
+
+        stage('Run API Tests') {
+            steps {
+                script {
+                    try {
+                        // Clean previous allure results to ensure report only contains current execution data
+                        sh 'rm -rf allure-results'
+                        
+                        def testCommand = "npm run test"
+                        if (params.TEST_SUITE != 'ALL') {
+                            testCommand = "npm run test:${params.TEST_SUITE.toLowerCase()}"
+                        }
+                        sh "${testCommand}"
+                    } catch (Exception e) {
+                        currentBuild.result = 'FAILURE'
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Generating Reports and Sending Notifications...'
+            
+            // Publish Allure Report to Jenkins (requires Allure Jenkins Plugin)
+            allure([
+                includeProperties: false,
+                jdk: '',
+                properties: [],
+                reportBuildPolicy: 'ALWAYS',
+                results: [[path: 'allure-results']]
+            ])
+            
+            // Generate Management Summary
+            sh 'npm run generate-summary'
+
+            // Send Notifications
+            script {
+                if (params.NOTIFY_SLACK) {
+                    sh 'npm run notify:slack'
+                }
+                
+                if (params.NOTIFY_EMAIL) {
+                    sh 'npm run notify:email'
+                }
+            }
+            
+            // Archive artifacts
+            archiveArtifacts artifacts: 'summary.json, logs/*.log', allowEmptyArchive: true
+        }
+        success {
+            echo 'Pipeline completed successfully!'
+        }
+        failure {
+            echo 'Pipeline failed! Check the reports for details.'
+        }
+    }
+}

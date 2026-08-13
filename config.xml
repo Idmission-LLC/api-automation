@@ -1,0 +1,151 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<project>
+  <description>API Automation Freestyle Project</description>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <hudson.model.ParametersDefinitionProperty>
+      <parameterDefinitions>
+        <hudson.model.ChoiceParameterDefinition>
+          <name>ENVIRONMENT</name>
+          <description>Target environment</description>
+          <choices class="java.util.Arrays$ArrayList">
+            <a class="string-array">
+              <string>DEV</string>
+              <string>QA</string>
+              <string>UAT</string>
+              <string>PROD</string>
+            </a>
+          </choices>
+        </hudson.model.ChoiceParameterDefinition>
+        <hudson.model.ChoiceParameterDefinition>
+          <name>TEST_SUITE</name>
+          <description>Test suite to run</description>
+          <choices class="java.util.Arrays$ArrayList">
+            <a class="string-array">
+              <string>ALL</string>
+              <string>SMOKE</string>
+              <string>REGRESSION</string>
+              <string>CRITICAL</string>
+            </a>
+          </choices>
+        </hudson.model.ChoiceParameterDefinition>
+        <hudson.model.BooleanParameterDefinition>
+          <name>NOTIFY_SLACK</name>
+          <description>Send Slack Notification?</description>
+          <defaultValue>true</defaultValue>
+        </hudson.model.BooleanParameterDefinition>
+        <hudson.model.BooleanParameterDefinition>
+          <name>NOTIFY_EMAIL</name>
+          <description>Send Email Notification?</description>
+          <defaultValue>true</defaultValue>
+        </hudson.model.BooleanParameterDefinition>
+      </parameterDefinitions>
+    </hudson.model.ParametersDefinitionProperty>
+  </properties>
+  
+  <!-- NullSCM because you will be placing the folder directly into the Jenkins workspace -->
+  <scm class="hudson.scm.NullSCM"/>
+  
+  <canRoam>true</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <triggers/>
+  <concurrentBuild>false</concurrentBuild>
+  
+  <!-- This section binds your Jenkins credentials to environment variables for the shell step -->
+  <buildWrappers>
+    <org.jenkinsci.plugins.credentialsbinding.impl.SecretBuildWrapper plugin="credentials-binding">
+      <bindings>
+        <org.jenkinsci.plugins.credentialsbinding.impl.StringBinding>
+          <credentialsId>api-username</credentialsId>
+          <variable>API_USERNAME</variable>
+        </org.jenkinsci.plugins.credentialsbinding.impl.StringBinding>
+        <org.jenkinsci.plugins.credentialsbinding.impl.StringBinding>
+          <credentialsId>api-password</credentialsId>
+          <variable>API_PASSWORD</variable>
+        </org.jenkinsci.plugins.credentialsbinding.impl.StringBinding>
+        <org.jenkinsci.plugins.credentialsbinding.impl.StringBinding>
+          <credentialsId>api-client-id</credentialsId>
+          <variable>API_CLIENT_ID</variable>
+        </org.jenkinsci.plugins.credentialsbinding.impl.StringBinding>
+        <org.jenkinsci.plugins.credentialsbinding.impl.StringBinding>
+          <credentialsId>api-client-secret</credentialsId>
+          <variable>API_CLIENT_SECRET</variable>
+        </org.jenkinsci.plugins.credentialsbinding.impl.StringBinding>
+      </bindings>
+    </org.jenkinsci.plugins.credentialsbinding.impl.SecretBuildWrapper>
+  </buildWrappers>
+  
+  <builders>
+    <!-- We use a single bash script that handles the try/catch logic via exit codes -->
+    <hudson.tasks.Shell>
+      <command>#!/bin/bash
+export ENV=$ENVIRONMENT
+
+echo "Running API Tests against ${ENV} environment..."
+node -v
+npm -v
+
+npm install
+npx playwright install --with-deps
+
+rm -rf allure-results
+
+TEST_EXIT_CODE=0
+
+if [ "$TEST_SUITE" = "ALL" ]; then
+    npm run test || TEST_EXIT_CODE=$?
+elif [ "$TEST_SUITE" = "SMOKE" ]; then
+    npm run test:smoke || TEST_EXIT_CODE=$?
+elif [ "$TEST_SUITE" = "REGRESSION" ]; then
+    npm run test:regression || TEST_EXIT_CODE=$?
+elif [ "$TEST_SUITE" = "CRITICAL" ]; then
+    npm run test:critical || TEST_EXIT_CODE=$?
+fi
+
+echo "Generating Reports and Sending Notifications..."
+npm run generate-summary || true
+
+if [ "$NOTIFY_SLACK" = "true" ]; then
+    npm run notify:slack || true
+fi
+
+if [ "$NOTIFY_EMAIL" = "true" ]; then
+    npm run notify:email || true
+fi
+
+# Exit with the test suite's exit code to properly mark the build as Success/Failure
+exit $TEST_EXIT_CODE
+</command>
+      <configuredLocalRules/>
+    </hudson.tasks.Shell>
+  </builders>
+  
+  <publishers>
+    <!-- Allure Report Publisher -->
+    <ru.yandex.qatools.allure.jenkins.AllureReportPublisher plugin="allure-jenkins-plugin">
+      <configPath></configPath>
+      <jdk></jdk>
+      <properties/>
+      <results>
+        <ru.yandex.qatools.allure.jenkins.config.ResultsConfig>
+          <path>allure-results</path>
+        </ru.yandex.qatools.allure.jenkins.config.ResultsConfig>
+      </results>
+      <reportBuildPolicy>ALWAYS</reportBuildPolicy>
+      <includeProperties>false</includeProperties>
+    </ru.yandex.qatools.allure.jenkins.AllureReportPublisher>
+    
+    <!-- Archive Artifacts -->
+    <hudson.tasks.ArtifactArchiver>
+      <artifacts>summary.json, logs/*.log</artifacts>
+      <allowEmptyArchive>true</allowEmptyArchive>
+      <onlyIfSuccessful>false</onlyIfSuccessful>
+      <fingerprint>false</fingerprint>
+      <defaultExcludes>true</defaultExcludes>
+      <caseSensitive>true</caseSensitive>
+      <followSymlinks>false</followSymlinks>
+    </hudson.tasks.ArtifactArchiver>
+  </publishers>
+</project>
