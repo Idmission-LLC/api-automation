@@ -14,7 +14,7 @@ pipeline {
         // Credentials will be loaded automatically by Playwright via dotenv from the respective .env.${ENV} file
         
         // SLACK_WEBHOOK_URL = credentials('slack-webhook-url')
-        SMTP_PASSWORD = credentials('smtp-password')
+        SMTP_PASSWORD = credentials('5e0a0311-2944-4f7f-9de5-e84821b5e5c0')
     }
 
     stages {
