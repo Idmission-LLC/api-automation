@@ -23,27 +23,12 @@ async function sendEmailNotification() {
 
     const summary: ExecutionSummary = JSON.parse(fs.readFileSync(summaryPath, 'utf8'));
 
-    const host = process.env.SMTP_HOST;
-    const port = process.env.SMTP_PORT ? parseInt(process.env.SMTP_PORT) : 587;
-    const user = process.env.SMTP_USER;
-    const pass = process.env.SMTP_PASSWORD;
-    const from = process.env.EMAIL_FROM;
     const to = process.env.EMAIL_TO;
 
-    if (!host || !user || !pass || !from || !to) {
-      console.warn('Incomplete SMTP configuration. Skipping Email notification.');
+    if (!to) {
+      console.warn('EMAIL_TO is not defined. Skipping Email notification content generation.');
       return;
     }
-
-    const transporter = nodemailer.createTransport({
-      host,
-      port,
-      secure: port === 465, // true for 465, false for other ports
-      auth: { user, pass },
-      tls: {
-        rejectUnauthorized: false
-      }
-    });
 
     const statusColor = summary.status === 'GO' ? 'green' : (summary.status === 'ATTENTION_REQUIRED' ? 'orange' : 'red');
     const resultText = summary.failed > 0 ? 'FAILED' : 'PASSED';
@@ -98,16 +83,13 @@ async function sendEmailNotification() {
       </div>
     `;
 
-    const info = await transporter.sendMail({
-      from,
-      to,
-      subject,
-      html
-    });
+    fs.writeFileSync(path.resolve(process.cwd(), 'email-subject.txt'), subject);
+    fs.writeFileSync(path.resolve(process.cwd(), 'email-content.html'), html);
+    fs.writeFileSync(path.resolve(process.cwd(), 'email-to.txt'), to);
 
-    console.log(`Email notification sent successfully: ${info.messageId}`);
+    console.log(`Email content generated successfully for Jenkins emailext.`);
   } catch (error: any) {
-    console.error(`Failed to send Email notification: ${error.message}`);
+    console.error(`Failed to generate Email content: ${error.message}`);
   }
 }
 

@@ -87,6 +87,19 @@ pipeline {
                 
                 if (params.NOTIFY_EMAIL) {
                     sh 'npm run notify:email'
+                    
+                    if (fileExists('email-content.html')) {
+                        def emailSubject = readFile('email-subject.txt').trim()
+                        def emailBody = readFile('email-content.html')
+                        def emailTo = readFile('email-to.txt').trim()
+
+                        emailext(
+                            subject: emailSubject,
+                            body: emailBody,
+                            mimeType: 'text/html',
+                            to: emailTo
+                        )
+                    }
                 }
             }
             
