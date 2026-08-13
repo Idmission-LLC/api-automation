@@ -4,7 +4,7 @@ import path from 'path';
 
 // Load environment specific .env file if it exists, fallback to default .env
 const environment = process.env.ENV || 'QA';
-dotenv.config({ path: path.resolve(__dirname, `.env.${environment.toLowerCase()}`) });
+dotenv.config({ path: path.resolve(__dirname, `.env.${environment}`) });
 dotenv.config({ path: path.resolve(__dirname, '.env') });
 
 export default defineConfig({
