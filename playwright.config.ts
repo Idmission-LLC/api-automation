@@ -16,6 +16,7 @@ export default defineConfig({
   workers: process.env.CI ? 4 : undefined,
   reporter: [
     ['list'],
+    ['json', { outputFile: 'test-results.json' }],
     ['allure-playwright', {
       detail: true,
       outputFolder: 'allure-results',

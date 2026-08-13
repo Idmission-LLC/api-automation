@@ -3,7 +3,7 @@ import * as dotenv from 'dotenv';
 import path from 'path';
 
 const environment = process.env.ENV || 'QA';
-dotenv.config({ path: path.resolve(__dirname, `../.env.${environment.toLowerCase()}`) });
+dotenv.config({ path: path.resolve(__dirname, `../.env.${environment}`) });
 dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
 console.log('Generating management summary...');

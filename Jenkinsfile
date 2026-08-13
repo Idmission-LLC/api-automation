@@ -76,6 +76,10 @@ pipeline {
                 results: [[path: 'allure-results']]
             ])
             
+            // Generate standalone single-file HTML Allure report
+            sh 'npx allure generate allure-results --clean -o allure-report'
+            sh 'npx allure-single-html-file --report-directory allure-report'
+            
             // Generate Management Summary
             sh 'npm run generate-summary'
 
@@ -97,7 +101,8 @@ pipeline {
                             subject: emailSubject,
                             body: emailBody,
                             mimeType: 'text/html',
-                            to: emailTo
+                            to: emailTo,
+                            attachmentsPattern: 'allure-report/complete.html'
                         )
                     }
                 }
