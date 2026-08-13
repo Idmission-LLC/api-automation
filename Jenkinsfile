@@ -6,9 +6,9 @@ pipeline {
     }
 
     parameters {
-        choice(name: 'ENVIRONMENT', choices: ['DEV', 'QA', 'DEMO', 'UAT', 'PROD'], description: 'Target environment')
-        choice(name: 'TEST_SUITE', choices: ['ALL', 'SMOKE', 'REGRESSION', 'CRITICAL'], description: 'Test suite to run')
-        booleanParam(name: 'NOTIFY_SLACK', defaultValue: true, description: 'Send Slack Notification?')
+        choice(name: 'ENVIRONMENT', choices: ['DEMO', 'UAT', 'PROD'], description: 'Target environment')
+        choice(name: 'TEST_SUITE', choices: ['ALL', 'SANITY', 'REGRESSION', 'CRITICAL'], description: 'Test suite to run')
+        booleanParam(name: 'NOTIFY_SLACK', defaultValue: false, description: 'Send Slack Notification?')
         booleanParam(name: 'NOTIFY_EMAIL', defaultValue: true, description: 'Send Email Notification?')
     }
 
