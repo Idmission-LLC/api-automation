@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     parameters {
-        choice(name: 'ENVIRONMENT', choices: ['DEV', 'QA', 'UAT', 'PROD'], description: 'Target environment')
+        choice(name: 'ENVIRONMENT', choices: ['DEV', 'QA', 'DEMO', 'UAT', 'PROD'], description: 'Target environment')
         choice(name: 'TEST_SUITE', choices: ['ALL', 'SMOKE', 'REGRESSION', 'CRITICAL'], description: 'Test suite to run')
         booleanParam(name: 'NOTIFY_SLACK', defaultValue: true, description: 'Send Slack Notification?')
         booleanParam(name: 'NOTIFY_EMAIL', defaultValue: true, description: 'Send Email Notification?')
@@ -11,14 +11,10 @@ pipeline {
     environment {
         ENV = "${params.ENVIRONMENT}"
         
-        // Fetch credentials from Jenkins (Replace the credential IDs with your actual Jenkins credential IDs)
-        API_USERNAME = credentials('api-username')
-        API_PASSWORD = credentials('api-password')
-        API_CLIENT_ID = credentials('api-client-id')
-        API_CLIENT_SECRET = credentials('api-client-secret')
+        // Credentials will be loaded automatically by Playwright via dotenv from the respective .env.${ENV} file
         
         // SLACK_WEBHOOK_URL = credentials('slack-webhook-url')
-        // SMTP_PASSWORD = credentials('smtp-password')
+        SMTP_PASSWORD = credentials('smtp-password')
     }
 
     stages {
