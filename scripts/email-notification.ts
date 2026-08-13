@@ -4,6 +4,8 @@ import { ExecutionSummary } from '../src/utils/reportUtils';
 import nodemailer from 'nodemailer';
 import * as dotenv from 'dotenv';
 
+const environment = process.env.ENV || 'QA';
+dotenv.config({ path: path.resolve(__dirname, `../.env.${environment}`) });
 dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
 async function sendEmailNotification() {

@@ -5,6 +5,8 @@ import * as dotenv from 'dotenv';
 // In a real framework, we'd use axios or fetch to send webhook
 import axios from 'axios';
 
+const environment = process.env.ENV || 'QA';
+dotenv.config({ path: path.resolve(__dirname, `../.env.${environment}`) });
 dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
 async function sendSlackNotification() {
