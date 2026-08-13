@@ -76,10 +76,6 @@ async function sendEmailNotification() {
             <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold; color: ${statusColor};">${summary.status.replace('_', ' ')}</td>
           </tr>
         </table>
-        
-        <p style="margin-top: 20px;">
-          <a href="https://ci.example.com/job/api-automation/lastSuccessfulBuild/allure/" style="background-color: #0056b3; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">View Full Allure Report</a>
-        </p>
       </div>
     `;
 
