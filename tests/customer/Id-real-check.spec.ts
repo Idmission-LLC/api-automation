@@ -15,10 +15,11 @@ test.describe('IDMission Customer API', () => {
 
     const response = await customerClient.idRealcheck(payload);
     expect([200]).toContain(response.status);
-    expect(response.data.status.statusCode).toBe('000');
-    expect(response.data.status.statusMessage).toBe("Form Submitted Successfully");
     // Add response parameter to allure report
     allure.parameter('Form ID', response.data.resultData.verificationResultId);
+    expect(response.data.status.statusCode).toBe('000');
+    expect(response.data.status.statusMessage).toBe("Form Submitted Successfully");
+
   });
 
 });
