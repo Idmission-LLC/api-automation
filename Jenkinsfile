@@ -12,6 +12,16 @@ pipeline {
         booleanParam(name: 'NOTIFY_EMAIL', defaultValue: true, description: 'Send Email Notification?')
     }
 
+    triggers {
+        parameterizedCron('''
+            # Run DEMO every 4 hours
+            H */4 * * * %ENVIRONMENT=DEMO;TEST_SUITE=ALL
+            
+            # Run UAT every 5 hours
+            H */5 * * * %ENVIRONMENT=UAT;TEST_SUITE=ALL
+        ''')
+    }
+
     environment {
         ENV = "${params.ENVIRONMENT}"
         
