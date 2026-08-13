@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    tools {
+        nodejs 'NodeJS' // Make sure the name matches what you configure in Jenkins -> Tools
+    }
+
     parameters {
         choice(name: 'ENVIRONMENT', choices: ['DEV', 'QA', 'DEMO', 'UAT', 'PROD'], description: 'Target environment')
         choice(name: 'TEST_SUITE', choices: ['ALL', 'SMOKE', 'REGRESSION', 'CRITICAL'], description: 'Test suite to run')
