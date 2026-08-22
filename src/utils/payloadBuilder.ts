@@ -472,19 +472,22 @@ export class PayloadBuilder {
                 "customerDataMatchConfig": {
                     "nameMatch": "Y",
                     "nameMatchAlgorithm": "JW",
-                    "nameMatchThreshold": "70",
+                    "nameMatchThreshold": "90",
                     "firstNameMatch": "Y",
                     "firstNameMatchAlgorithm": "JW",
-                    "firstNameMatchThreshold": "70",
+                    "firstNameMatchThreshold": "90",
                     "middleNameMatch": "Y",
                     "middleNameMatchAlgorithm": "JW",
-                    "middleNameMatchThreshold": "15",
+                    "middleNameMatchThreshold": "90",
                     "lastNameMatch": "Y",
                     "lastNameMatchAlgorithm": "JW",
                     "lastNameMatchThreshold": "90",
                     "addressMatch": "Y",
                     "addressMatchAlgorithm": "JW",
-                    "addressMatchThreshold": "70"
+                    "addressMatchThreshold": "90",
+                    "postalCodeMatch": "Y",
+                    "postalCodeMatchAlgorithm": "JW",
+                    "postalCodeMatchThreshold": "100"
                 }
             }
         }; // Replace with proof-of-address base JSON
