@@ -4,12 +4,15 @@ import { TokenManager } from '../utils/tokenManager';
 import { ApiResponse } from '../types/api.types';
 
 export class CustomerClient extends BaseApiClient {
-  constructor(request: APIRequestContext) {
+  private companyName?: string;
+
+  constructor(request: APIRequestContext, companyName?: string) {
     super(request);
+    this.companyName = companyName;
   }
 
   private async postWithAuth(endpoint: string, payload: any): Promise<ApiResponse<any>> {
-    const token = await TokenManager.getToken(this.request);
+    const token = await TokenManager.getToken(this.request, this.companyName);
     return this.post(endpoint, payload, { 'Authorization': `Bearer ${token}` });
   }
 

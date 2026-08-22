@@ -5,7 +5,7 @@ import { PayloadBuilder } from '../../src/utils/payloadBuilder';
 test.describe('IDMission Customer API', () => {
 
   // Independent test - tagged as Sanity
-  test('Validate enroll Biometrics', { tag: '@sanity' }, async ({ customerClient }) => {
+  test('Validate enroll Biometrics', { tag: ['@sanity', '@company:HWTest_Sandbox'] }, async ({ customerClient }) => {
     allure.epic('Customer API');
     allure.feature('enroll Biometrics');
     allure.story('enroll Biometrics');

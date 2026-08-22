@@ -5,7 +5,7 @@ import { PayloadBuilder } from '../../src/utils/payloadBuilder';
 test.describe('IDMission Customer API', () => {
 
   // Independent test - tagged as Sanity
-  test('Should successfully validate ID', { tag: '@sanity' }, async ({ customerClient }) => {
+  test('Should successfully validate ID', { tag: ['@sanity', '@company:HWTest_Sandbox'] }, async ({ customerClient }) => {
     allure.epic('Customer API');
     allure.feature('Validate ID');
     allure.story('Validate ID');
@@ -26,7 +26,7 @@ test.describe('IDMission Customer API', () => {
 
 
   // Independent test - tagged as Regression
-  test('validate ID IND Passport', { tag: '@regression' }, async ({ customerClient }) => {
+  test('validate ID IND Passport', { tag: ['@regression', '@company:HWTest_Sandbox'] }, async ({ customerClient }) => {
     allure.epic('Customer API');
     allure.feature('Validate ID');
     allure.story('Validate ID test2');

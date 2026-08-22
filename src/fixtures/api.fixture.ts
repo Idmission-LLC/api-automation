@@ -6,8 +6,15 @@ type ApiFixtures = {
 };
 
 export const test = base.extend<ApiFixtures>({
-  customerClient: async ({ request }, use) => {
-    await use(new CustomerClient(request));
+  customerClient: async ({ request }, use, testInfo) => {
+    let companyName = 'default';
+    for (const tag of testInfo.tags) {
+      if (tag.startsWith('@company:')) {
+        companyName = tag.replace('@company:', '');
+        break;
+      }
+    }
+    await use(new CustomerClient(request, companyName));
   },
 });
 

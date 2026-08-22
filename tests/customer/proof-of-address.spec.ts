@@ -5,7 +5,7 @@ import { PayloadBuilder } from '../../src/utils/payloadBuilder';
 test.describe('IDMission Customer API', () => {
 
   // Independent test - tagged as Sanity
-  test('Should successfully validate proof of address', { tag: '@sanity' }, async ({ customerClient }) => {
+  test('Should successfully validate proof of address', { tag: ['@sanity', '@company:HWTest_Sandbox'] }, async ({ customerClient }) => {
     allure.epic('Customer API');
     allure.feature('proof of address');
     allure.story('proof of address');

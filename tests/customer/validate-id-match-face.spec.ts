@@ -5,7 +5,7 @@ import { PayloadBuilder } from '../../src/utils/payloadBuilder';
 test.describe('IDMission Customer API', () => {
 
   // Independent test - tagged as Sanity
-  test('Should successfully validate-id-match-face', { tag: '@sanity' }, async ({ customerClient }) => {
+  test('Should successfully validate-id-match-face', { tag: ['@sanity', '@company:HWTest_Sandbox'] }, async ({ customerClient }) => {
     allure.epic('Customer API');
     allure.feature('validate-id-match-face');
     allure.story('validate-id-match-face');

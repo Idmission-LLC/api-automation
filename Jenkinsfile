@@ -18,11 +18,11 @@ pipeline {
 
     triggers {
         parameterizedCron('''
-            # Run DEMO every 4 hours
-            H */4 * * * %ENVIRONMENT=DEMO;TEST_SUITE=ALL
+            # Run DEMO every 8 hours
+            H */8 * * * %ENVIRONMENT=DEMO;TEST_SUITE=ALL
             
-            # Run UAT every 5 hours
-            H */5 * * * %ENVIRONMENT=UAT;TEST_SUITE=ALL
+            # Run UAT every 9 hours
+            H */9 * * * %ENVIRONMENT=UAT;TEST_SUITE=ALL
         ''')
     }
 
@@ -68,7 +68,11 @@ pipeline {
                         if (params.TEST_SUITE != 'ALL') {
                             testCommand = "npm run test:${params.TEST_SUITE.toLowerCase()}"
                         }
-                        sh "${testCommand}"
+                        
+                        def credId = "companies-credentials-${params.ENVIRONMENT.toLowerCase()}"
+                        withCredentials([string(credentialsId: credId, variable: 'COMPANIES_CREDENTIALS')]) {
+                            sh "${testCommand}"
+                        }
                     } catch (Exception e) {
                         currentBuild.result = 'FAILURE'
                     }
