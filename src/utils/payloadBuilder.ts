@@ -448,10 +448,10 @@ export class PayloadBuilder {
         const base = {
             "customerData": {
                 "personalData": {
-                    "name": "",
-                    "firstName": "",
-                    "middleName": "",
-                    "lastName": "",
+                    "name": "LLANO ALVAREZ DIEGO",
+                    "firstName": "LLANO",
+                    "middleName": "ALVAREZ",
+                    "lastName": "DIEGO",
                     "addressLine1": "",
                     "addressLine2": "",
                     "city": "",
