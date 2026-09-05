@@ -14,9 +14,9 @@ test.describe('IDMission Customer API', () => {
     const payload = PayloadBuilder.buildGenerateIdentityLinkPayload();
 
     const response = await customerClient.generateIdentityLink(payload);
-    expect([200]).toContain(response.status);
-    expect(response.data.status.statusCode).toBe('000');
-    expect(response.data.status.statusMessage).toBe("Successfully generated Kyc Url.");
+    expect([200], 'Response status should be 200').toContain(response.status);
+    expect(response.data.status.statusCode, 'Status code should be 000').toBe('000');
+    expect(response.data.status.statusMessage, 'Status message should be "Successfully generated Kyc Url."').toBe("Successfully generated Kyc Url.");
   });
 
 });

@@ -14,12 +14,12 @@ test.describe('IDMission Customer API', () => {
     const payload = PayloadBuilder.buildEnrollBiometricsPayload();
 
     const response = await customerClient.enrollBiometrics(payload);
-    expect([200]).toContain(response.status);
+    expect([200], 'Response status should be 200').toContain(response.status);
     // Add response parameter to allure report
     allure.parameter('Form ID', response.data.resultData.verificationResultId);
-    expect(response.data.status.statusCode).toBe('000');
-    expect(response.data.status.statusMessage).toBe("Form Submitted Successfully");
-    expect(response.data.resultData.verificationResult).toBe('Customer Onboarded');
+    expect(response.data.status.statusCode, 'Status code should be 000').toBe('000');
+    expect(response.data.status.statusMessage, 'Status message should be "Form Submitted Successfully"').toBe("Form Submitted Successfully");
+    expect(response.data.resultData.verificationResult, 'Verification result should be "Customer Onboarded"').toBe('Customer Onboarded');
 
 
   });

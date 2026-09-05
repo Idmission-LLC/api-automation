@@ -14,13 +14,13 @@ test.describe('IDMission Customer API', () => {
     const payload = PayloadBuilder.buildProofOfAddressPayload();
 
     const response = await customerClient.proofOfAddress(payload);
-    expect([200]).toContain(response.status);
+    expect([200], 'Response status should be 200').toContain(response.status);
     // Add response parameter to allure report
     allure.parameter('Form ID', response.data.resultData.verificationResultId);
-    expect(response.data.status.statusCode).toBe('000');
-    expect(response.data.status.statusMessage).toBe("Form Submitted Successfully");
-    expect(response.data.resultData.verificationResult).toBe('Approved');
-    expect(response.data.responseCustomerData.extractedData.isPOA).toBe('Y');
+    expect(response.data.status.statusCode, 'Status code should be 000').toBe('000');
+    expect(response.data.status.statusMessage, 'Status message should be "Form Submitted Successfully"').toBe("Form Submitted Successfully");
+    expect(response.data.resultData.verificationResult, 'Verification result should be "Approved"').toBe('Approved');
+    expect(response.data.responseCustomerData.extractedData.isPOA, 'isPOA should be "Y"').toBe('Y');
 
   });
 
@@ -54,13 +54,13 @@ test.describe('IDMission Customer API', () => {
     });
 
     const response = await customerClient.proofOfAddress(payload);
-    expect([200]).toContain(response.status);
+    expect([200], 'Response status should be 200').toContain(response.status);
     // Add response parameter to allure report
     allure.parameter('Form ID', response.data.resultData.verificationResultId);
-    expect(response.data.status.statusCode).toBe('000');
-    expect(response.data.status.statusMessage).toBe("Form Submitted Successfully");
-    expect(response.data.resultData.verificationResult).toBe('Approved');
-    expect(response.data.responseCustomerData.extractedData.isPOA).toBe('Y');
+    expect(response.data.status.statusCode, 'Status code should be 000').toBe('000');
+    expect(response.data.status.statusMessage, 'Status message should be "Form Submitted Successfully"').toBe("Form Submitted Successfully");
+    expect(response.data.resultData.verificationResult, 'Verification result should be "Approved"').toBe('Approved');
+    expect(response.data.responseCustomerData.extractedData.isPOA, 'isPOA should be "Y"').toBe('Y');
 
   });
 
@@ -94,13 +94,13 @@ test.describe('IDMission Customer API', () => {
     });
 
     const response = await customerClient.proofOfAddress(payload);
-    expect([200]).toContain(response.status);
+    expect([200], 'Response status should be 200').toContain(response.status);
     // Add response parameter to allure report
     allure.parameter('Form ID', response.data.resultData.verificationResultId);
-    expect(response.data.status.statusCode).toBe('000');
-    expect(response.data.status.statusMessage).toBe("Form Submitted Successfully");
-    expect(response.data.resultData.verificationResult).toBe('Approved');
-    expect(response.data.responseCustomerData.extractedData.isPOA).toBe('Y');
+    expect(response.data.status.statusCode, 'Status code should be 000').toBe('000');
+    expect(response.data.status.statusMessage, 'Status message should be "Form Submitted Successfully"').toBe("Form Submitted Successfully");
+    expect(response.data.resultData.verificationResult, 'Verification result should be "Approved"').toBe('Approved');
+    expect(response.data.responseCustomerData.extractedData.isPOA, 'isPOA should be "Y"').toBe('Y');
 
   });
 
@@ -134,14 +134,14 @@ test.describe('IDMission Customer API', () => {
     });
 
     const response = await customerClient.proofOfAddress(payload);
-    expect([200]).toContain(response.status);
+    expect([200], 'Response status should be 200').toContain(response.status);
     // Add response parameter to allure report
     allure.parameter('Form ID', response.data.resultData.verificationResultId);
-    expect(response.data.status.statusCode).toBe('000');
-    expect(response.data.status.statusMessage).toBe("Form Submitted Successfully");
-    expect(response.data.resultData.verificationResult).toBe('Name Match Failed');
-    expect(response.data.resultData.verificationResultCode).toBe('66');
-    expect(response.data.responseCustomerData.extractedData.isPOA).toBe('Y');
+    expect(response.data.status.statusCode, 'Status code should be 000').toBe('000');
+    expect(response.data.status.statusMessage, 'Status message should be "Form Submitted Successfully"').toBe("Form Submitted Successfully");
+    expect(response.data.resultData.verificationResult, 'Verification result should be "Name Match Failed"').toBe('Name Match Failed');
+    expect(response.data.resultData.verificationResultCode, 'verificationResultCode should be "66"').toBe('66');
+    expect(response.data.responseCustomerData.extractedData.isPOA, 'isPOA should be "Y"').toBe('Y');
 
   });
 
@@ -175,14 +175,14 @@ test.describe('IDMission Customer API', () => {
     });
 
     const response = await customerClient.proofOfAddress(payload);
-    expect([200]).toContain(response.status);
+    expect([200], 'Response status should be 200').toContain(response.status);
     // Add response parameter to allure report
     allure.parameter('Form ID', response.data.resultData.verificationResultId);
-    expect(response.data.status.statusCode).toBe('000');
-    expect(response.data.status.statusMessage).toBe("Form Submitted Successfully");
-    expect(response.data.resultData.verificationResult).toBe('Name Match Failed');
-    expect(response.data.resultData.verificationResultCode).toBe('66');
-    expect(response.data.responseCustomerData.extractedData.isPOA).toBe('Y');
+    expect(response.data.status.statusCode, 'Status code should be 000').toBe('000');
+    expect(response.data.status.statusMessage, 'Status message should be "Form Submitted Successfully"').toBe("Form Submitted Successfully");
+    expect(response.data.resultData.verificationResult, 'Verification result should be "Name Match Failed"').toBe('Name Match Failed');
+    expect(response.data.resultData.verificationResultCode, 'verificationResultCode should be "66"').toBe('66');
+    expect(response.data.responseCustomerData.extractedData.isPOA, 'isPOA should be "Y"').toBe('Y');
 
   });
 
@@ -216,14 +216,14 @@ test.describe('IDMission Customer API', () => {
     });
 
     const response = await customerClient.proofOfAddress(payload);
-    expect([200]).toContain(response.status);
+    expect([200], 'Response status should be 200').toContain(response.status);
     // Add response parameter to allure report
     allure.parameter('Form ID', response.data.resultData.verificationResultId);
-    expect(response.data.status.statusCode).toBe('000');
-    expect(response.data.status.statusMessage).toBe("Form Submitted Successfully");
-    expect(response.data.resultData.verificationResult).toBe('Address Match Failed');
-    expect(response.data.resultData.verificationResultCode).toBe('152');
-    expect(response.data.responseCustomerData.extractedData.isPOA).toBe('Y');
+    expect(response.data.status.statusCode, 'Status code should be 000').toBe('000');
+    expect(response.data.status.statusMessage, 'Status message should be "Form Submitted Successfully"').toBe("Form Submitted Successfully");
+    expect(response.data.resultData.verificationResult, 'Verification result should be "Address Match Failed"').toBe('Address Match Failed');
+    expect(response.data.resultData.verificationResultCode, 'verificationResultCode should be "152"').toBe('152');
+    expect(response.data.responseCustomerData.extractedData.isPOA, 'isPOA should be "Y"').toBe('Y');
 
   });
 
@@ -257,15 +257,15 @@ test.describe('IDMission Customer API', () => {
     });
 
     const response = await customerClient.proofOfAddress(payload);
-    expect([200]).toContain(response.status);
+    expect([200], 'Response status should be 200').toContain(response.status);
     // Add response parameter to allure report
     allure.parameter('Form ID', response.data.resultData.verificationResultId);
-    expect(response.data.status.statusCode).toBe('000');
-    expect(response.data.status.statusMessage).toBe("Form Submitted Successfully");
-    expect(response.data.responseCustomerData.extractedData.isPOA).toBe('Y');
-    expect(response.data.resultData.verificationResult).toBe('Address Match Failed');
-    expect(response.data.resultData.verificationResultCode).toBe('152');
-    expect(response.data.responseCustomerData.extractedData.isPOA).toBe('Y');
+    expect(response.data.status.statusCode, 'Status code should be 000').toBe('000');
+    expect(response.data.status.statusMessage, 'Status message should be "Form Submitted Successfully"').toBe("Form Submitted Successfully");
+    expect(response.data.responseCustomerData.extractedData.isPOA, 'isPOA should be "Y"').toBe('Y');
+    expect(response.data.resultData.verificationResult, 'Verification result should be "Address Match Failed"').toBe('Address Match Failed');
+    expect(response.data.resultData.verificationResultCode, 'verificationResultCode should be "152"').toBe('152');
+    expect(response.data.responseCustomerData.extractedData.isPOA, 'isPOA should be "Y"').toBe('Y');
 
   });
 
@@ -299,16 +299,16 @@ test.describe('IDMission Customer API', () => {
     });
 
     const response = await customerClient.proofOfAddress(payload);
-    expect([200]).toContain(response.status);
+    expect([200], 'Response status should be 200').toContain(response.status);
     // Add response parameter to allure report
     allure.parameter('Form ID', response.data.resultData.verificationResultId);
-    expect(response.data.status.statusCode).toBe('000');
-    expect(response.data.status.statusMessage).toBe("Form Submitted Successfully");
-    expect(response.data.resultData.verificationResult).toBe('Approved');
-    expect(response.data.resultData.verificationResultCode).toBe('00');
-    expect(response.data.responseCustomerData.extractedData.isPOA).toBe('Y');
-    expect(response.data.responseCustomerData.extractedData.issuerName).toBe('FIFTH THIRD BANK');
-    expect(response.data.responseCustomerData.extractedData.customerName).toBe('Mr John Doe');
+    expect(response.data.status.statusCode, 'Status code should be 000').toBe('000');
+    expect(response.data.status.statusMessage, 'Status message should be "Form Submitted Successfully"').toBe("Form Submitted Successfully");
+    expect(response.data.resultData.verificationResult, 'Verification result should be "Approved"').toBe('Approved');
+    expect(response.data.resultData.verificationResultCode, 'verificationResultCode should be "00"').toBe('00');
+    expect(response.data.responseCustomerData.extractedData.isPOA, 'isPOA should be "Y"').toBe('Y');
+    expect(response.data.responseCustomerData.extractedData.issuerName, 'issuerName should be "FIFTH THIRD BANK"').toBe('FIFTH THIRD BANK');
+    expect(response.data.responseCustomerData.extractedData.customerName, 'customerName should be "Mr John Doe"').toBe('Mr John Doe');
   });
 
   test('BankStatement 4th Page details with Approved Case', { tag: ['@regression', '@company:HWTest_Sandbox'] }, async ({ customerClient }) => {
@@ -341,16 +341,16 @@ test.describe('IDMission Customer API', () => {
     });
 
     const response = await customerClient.proofOfAddress(payload);
-    expect([200]).toContain(response.status);
+    expect([200], 'Response status should be 200').toContain(response.status);
     // Add response parameter to allure report
     allure.parameter('Form ID', response.data.resultData.verificationResultId);
-    expect(response.data.status.statusCode).toBe('000');
-    expect(response.data.status.statusMessage).toBe("Form Submitted Successfully");
-    expect(response.data.resultData.verificationResult).toBe('Approved');
-    expect(response.data.resultData.verificationResultCode).toBe('00');
-    expect(response.data.responseCustomerData.extractedData.isPOA).toBe('Y');
-    expect(response.data.responseCustomerData.extractedData.issuerName).toBe('WELLS FARGO');
-    expect(response.data.responseCustomerData.extractedData.customerName).toBe('Rachael Dean');
+    expect(response.data.status.statusCode, 'Status code should be 000').toBe('000');
+    expect(response.data.status.statusMessage, 'Status message should be "Form Submitted Successfully"').toBe("Form Submitted Successfully");
+    expect(response.data.resultData.verificationResult, 'Verification result should be "Approved"').toBe('Approved');
+    expect(response.data.resultData.verificationResultCode, 'verificationResultCode should be "00"').toBe('00');
+    expect(response.data.responseCustomerData.extractedData.isPOA, 'isPOA should be "Y"').toBe('Y');
+    expect(response.data.responseCustomerData.extractedData.issuerName, 'issuerName should be "WELLS FARGO"').toBe('WELLS FARGO');
+    expect(response.data.responseCustomerData.extractedData.customerName, 'customerName should be "Rachael Dean"').toBe('Rachael Dean');
   });
 
   test('Proof of address Mex VID POA Analysis Failed', { tag: ['@regression', '@company:HWTest_Sandbox'] }, async ({ customerClient }) => {
@@ -382,14 +382,14 @@ test.describe('IDMission Customer API', () => {
     });
 
     const response = await customerClient.proofOfAddress(payload);
-    expect([200]).toContain(response.status);
+    expect([200], 'Response status should be 200').toContain(response.status);
     // Add response parameter to allure report
     allure.parameter('Form ID', response.data.resultData.verificationResultId);
-    expect(response.data.status.statusCode).toBe('000');
-    expect(response.data.status.statusMessage).toBe("Form Submitted Successfully");
-    expect(response.data.resultData.verificationResult).toBe('POA Analysis Failed');
-    expect(response.data.resultData.verificationResultCode).toBe('142');
-    expect(response.data.responseCustomerData.extractedData.isPOA).toBe('N');
+    expect(response.data.status.statusCode, 'Status code should be 000').toBe('000');
+    expect(response.data.status.statusMessage, 'Status message should be "Form Submitted Successfully"').toBe("Form Submitted Successfully");
+    expect(response.data.resultData.verificationResult, 'Verification result should be "POA Analysis Failed"').toBe('POA Analysis Failed');
+    expect(response.data.resultData.verificationResultCode, 'verificationResultCode should be "142"').toBe('142');
+    expect(response.data.responseCustomerData.extractedData.isPOA, 'isPOA should be "N"').toBe('N');
   });
 
 });

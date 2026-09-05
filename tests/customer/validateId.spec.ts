@@ -32,12 +32,12 @@ test.describe('IDMission Customer API', () => {
     const payload = PayloadBuilder.buildValidateIdPayload();
 
     const response = await customerClient.validateId(payload);
-    expect([200]).toContain(response.status);
+    expect([200], 'Response status should be 200').toContain(response.status);
     // Add response parameter to allure report
     allure.parameter('Form ID', response.data.resultData.verificationResultId);
-    expect(response.data.status.statusCode).toBe('000');
-    expect(response.data.status.statusMessage).toBe("Form Submitted Successfully");
-    expect(response.data.resultData.verificationResult).toBe('Approved');
+    expect(response.data.status.statusCode, 'Status code should be 000').toBe('000');
+    expect(response.data.status.statusMessage, 'Status message should be "Form Submitted Successfully"').toBe("Form Submitted Successfully");
+    expect(response.data.resultData.verificationResult, 'Verification result should be "Approved"').toBe('Approved');
 
 
   });
@@ -63,12 +63,12 @@ test.describe('IDMission Customer API', () => {
     });
 
     const response = await customerClient.validateId(payload);
-    expect([200]).toContain(response.status);
+    expect([200], 'Response status should be 200').toContain(response.status);
     // Add response parameter to allure report
     allure.parameter('Form ID', response.data.resultData.verificationResultId);
-    expect(response.data.status.statusCode).toBe('000');
-    expect(response.data.status.statusMessage).toBe("Form Submitted Successfully");
-    expect(response.data.resultData.verificationResult).toBe('Approved');
+    expect(response.data.status.statusCode, 'Status code should be 000').toBe('000');
+    expect(response.data.status.statusMessage, 'Status message should be "Form Submitted Successfully"').toBe("Form Submitted Successfully");
+    expect(response.data.resultData.verificationResult, 'Verification result should be "Approved"').toBe('Approved');
 
   });
 
@@ -115,11 +115,11 @@ test.describe('IDMission Customer API', () => {
       });
 
       const response = await customerClient.validateId(payload);
-      expect([200]).toContain(response.status);
+      expect([200], 'Response status should be 200').toContain(response.status);
       allure.parameter('Form ID', response.data.resultData.verificationResultId);
-      expect(response.data.status.statusCode).toBe('000');
-      expect(response.data.status.statusMessage).toBe("Form Submitted Successfully");
-      expect(response.data.resultData.verificationResult).toBe('Approved');
+      expect(response.data.status.statusCode, 'Status code should be 000').toBe('000');
+      expect(response.data.status.statusMessage, 'Status message should be "Form Submitted Successfully"').toBe("Form Submitted Successfully");
+      expect(response.data.resultData.verificationResult, 'Verification result should be "Approved"').toBe('Approved');
 
       const expectedFormId = String(response.data.resultData.verificationResultId);
 
@@ -137,14 +137,14 @@ test.describe('IDMission Customer API', () => {
       expect(matchedPayload, `Webhook should be triggered for Form ID ${expectedFormId} at ${webhookUrl}`).toBeDefined();
 
       // Validate webhook payload
-      expect(matchedPayload.Form_Status).toBe('Approved');
-      expect(String(matchedPayload.Form_Id)).toBe(expectedFormId);
-      expect(matchedPayload.Form_Data).toBeDefined();
-      expect(matchedPayload.Form_Data.ID_Number).toBe('062015218');
-      expect(matchedPayload.Form_Data.Valid_ID_Number).toBe('Y');
-      expect(matchedPayload.Form_Data.Face_Detected).toBe('Y');
-      expect(matchedPayload.Form_Data.ID_Number_Match_Result).toBe('Matched');
-      expect(matchedPayload.Form_Data.Form_State_Code).toBe('00');
+      expect(matchedPayload.Form_Status, 'Webhook Form_Status should be Approved').toBe('Approved');
+      expect(String(matchedPayload.Form_Id), 'Webhook Form_Id should match requested Form ID').toBe(expectedFormId);
+      expect(matchedPayload.Form_Data, 'Webhook Form_Data should be present').toBeDefined();
+      expect(matchedPayload.Form_Data.ID_Number, 'Webhook ID_Number should match 062015218').toBe('062015218');
+      expect(matchedPayload.Form_Data.Valid_ID_Number, 'Webhook Valid_ID_Number should be Y').toBe('Y');
+      expect(matchedPayload.Form_Data.Face_Detected, 'Webhook Face_Detected should be Y').toBe('Y');
+      expect(matchedPayload.Form_Data.ID_Number_Match_Result, 'Webhook ID_Number_Match_Result should be Matched').toBe('Matched');
+      expect(matchedPayload.Form_Data.Form_State_Code, 'Webhook Form_State_Code should be 00').toBe('00');
     } finally {
       server.close();
     }
