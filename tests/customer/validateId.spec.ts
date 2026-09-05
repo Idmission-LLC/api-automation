@@ -78,8 +78,7 @@ test.describe('IDMission Customer API', () => {
     allure.feature('Validate ID');
     allure.story('Validate ID with Webhook');
 
-    let webhookTriggered = false;
-    let webhookPayload: any = null;
+    let receivedWebhooks: any[] = [];
 
     const server = http.createServer((req, res) => {
       let body = '';
@@ -87,11 +86,10 @@ test.describe('IDMission Customer API', () => {
         body += chunk.toString();
       });
       req.on('end', () => {
-        webhookTriggered = true;
         try {
-          webhookPayload = JSON.parse(body);
+          receivedWebhooks.push(JSON.parse(body));
         } catch (e) {
-          webhookPayload = body;
+          receivedWebhooks.push(body);
         }
         res.writeHead(200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ status: 'success' }));
@@ -123,27 +121,30 @@ test.describe('IDMission Customer API', () => {
       expect(response.data.status.statusMessage).toBe("Form Submitted Successfully");
       expect(response.data.resultData.verificationResult).toBe('Approved');
 
-      // Wait briefly for the webhook to be triggered
+      const expectedFormId = String(response.data.resultData.verificationResultId);
+
+      // Wait briefly for the correct webhook to be triggered
       let retries = 15;
-      while (!webhookTriggered && retries > 0) {
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        retries--;
+      let matchedPayload: any = null;
+      while (!matchedPayload && retries > 0) {
+        matchedPayload = receivedWebhooks.find(p => String(p.Form_Id) === expectedFormId);
+        if (!matchedPayload) {
+          await new Promise(resolve => setTimeout(resolve, 1000));
+          retries--;
+        }
       }
 
-      expect(webhookTriggered, `Webhook should be triggered at ${webhookUrl}`).toBe(true);
-      // Optionally log the webhook payload for debugging
-      // console.log('Webhook payload received:', webhookPayload);
+      expect(matchedPayload, `Webhook should be triggered for Form ID ${expectedFormId} at ${webhookUrl}`).toBeDefined();
 
       // Validate webhook payload
-      expect(webhookPayload).toBeDefined();
-      expect(webhookPayload.Form_Status).toBe('Approved');
-      expect(webhookPayload.Form_Id).toBe(response.data.resultData.verificationResultId);
-      expect(webhookPayload.Form_Data).toBeDefined();
-      expect(webhookPayload.Form_Data.ID_Number).toBe('062015218');
-      expect(webhookPayload.Form_Data.Valid_ID_Number).toBe('Y');
-      expect(webhookPayload.Form_Data.Face_Detected).toBe('Y');
-      expect(webhookPayload.Form_Data.ID_Number_Match_Result).toBe('Matched');
-      expect(webhookPayload.Form_Data.Form_State_Code).toBe('00');
+      expect(matchedPayload.Form_Status).toBe('Approved');
+      expect(String(matchedPayload.Form_Id)).toBe(expectedFormId);
+      expect(matchedPayload.Form_Data).toBeDefined();
+      expect(matchedPayload.Form_Data.ID_Number).toBe('062015218');
+      expect(matchedPayload.Form_Data.Valid_ID_Number).toBe('Y');
+      expect(matchedPayload.Form_Data.Face_Detected).toBe('Y');
+      expect(matchedPayload.Form_Data.ID_Number_Match_Result).toBe('Matched');
+      expect(matchedPayload.Form_Data.Form_State_Code).toBe('00');
     } finally {
       server.close();
     }
