@@ -1,6 +1,24 @@
 import { test, expect } from '../../src/fixtures/api.fixture';
 import { allure } from 'allure-playwright';
 import { PayloadBuilder } from '../../src/utils/payloadBuilder';
+import * as http from 'http';
+import * as os from 'os';
+import { AddressInfo } from 'net';
+
+function getLocalIpAddress() {
+  const interfaces = os.networkInterfaces();
+  for (const devName in interfaces) {
+    const iface = interfaces[devName];
+    if (!iface) continue;
+    for (let i = 0; i < iface.length; i++) {
+      const alias = iface[i];
+      if (alias.family === 'IPv4' && alias.address !== '127.0.0.1' && !alias.internal) {
+        return alias.address;
+      }
+    }
+  }
+  return '127.0.0.1';
+}
 
 test.describe('IDMission Customer API', () => {
 
@@ -26,7 +44,7 @@ test.describe('IDMission Customer API', () => {
 
 
   // Independent test - tagged as Regression
-  test('validate ID IND Passport', { tag: ['@regression', '@company:HWTest_Sandbox'] }, async ({ customerClient }) => {
+  test('validate ID IND Passport', { tag: ['@sanity', '@company:HWTest_Sandbox'] }, async ({ customerClient }) => {
     allure.epic('Customer API');
     allure.feature('Validate ID');
     allure.story('Validate ID test2');
@@ -54,6 +72,71 @@ test.describe('IDMission Customer API', () => {
 
   });
 
+  // Test case for Webhook validation
+  test('validate ID with Webhook triggered', { tag: ['@regression', '@company:HWTest_Sandbox'] }, async ({ customerClient }) => {
+    allure.epic('Customer API');
+    allure.feature('Validate ID');
+    allure.story('Validate ID with Webhook');
+
+    let webhookTriggered = false;
+    let webhookPayload: any = null;
+
+    const server = http.createServer((req, res) => {
+      let body = '';
+      req.on('data', chunk => {
+        body += chunk.toString();
+      });
+      req.on('end', () => {
+        webhookTriggered = true;
+        try {
+          webhookPayload = JSON.parse(body);
+        } catch (e) {
+          webhookPayload = body;
+        }
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ status: 'success' }));
+      });
+    });
+
+    await new Promise<void>((resolve) => {
+      server.listen(0, () => resolve());
+    });
+
+    const port = (server.address() as AddressInfo).port;
+    const ipAddress = getLocalIpAddress();
+    const webhookUrl = `http://${ipAddress}:${port}/webhook`;
+
+    console.log(`Webhook server listening on ${webhookUrl}`);
+
+    try {
+      const payload = PayloadBuilder.buildValidateIdPayload({
+        "additionalData": {
+          "postDataAPIRequired": "Y",
+          "postDataAPIURL": webhookUrl
+        }
+      });
+
+      const response = await customerClient.validateId(payload);
+      expect([200]).toContain(response.status);
+      allure.parameter('Form ID', response.data.resultData.verificationResultId);
+      expect(response.data.status.statusCode).toBe('000');
+      expect(response.data.status.statusMessage).toBe("Form Submitted Successfully");
+      expect(response.data.resultData.verificationResult).toBe('Approved');
+
+      // Wait briefly for the webhook to be triggered
+      let retries = 15;
+      while (!webhookTriggered && retries > 0) {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        retries--;
+      }
+
+      expect(webhookTriggered, `Webhook was not triggered at ${webhookUrl}`).toBe(true);
+      // Optionally log the webhook payload for debugging
+      console.log('Webhook payload received:', webhookPayload);
+    } finally {
+      server.close();
+    }
+  });
 
 });
 
