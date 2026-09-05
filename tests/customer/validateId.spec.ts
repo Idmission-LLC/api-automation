@@ -44,7 +44,7 @@ test.describe('IDMission Customer API', () => {
 
 
   // Independent test - tagged as Regression
-  test('validate ID IND Passport', { tag: ['@sanity', '@company:HWTest_Sandbox'] }, async ({ customerClient }) => {
+  test('validate ID IND Passport idBackImageRequired N', { tag: ['@regression', '@company:HWTest_Sandbox'] }, async ({ customerClient }) => {
     allure.epic('Customer API');
     allure.feature('Validate ID');
     allure.story('Validate ID test2');
@@ -73,7 +73,7 @@ test.describe('IDMission Customer API', () => {
   });
 
   // Test case for Webhook validation
-  test('validate ID with Webhook triggered', { tag: ['@regression', '@company:HWTest_Sandbox'] }, async ({ customerClient }) => {
+  test('validate ID with Webhook triggered postDataAPIRequired Y and postDataAPIURL', { tag: ['@regression', '@company:HWTest_Sandbox'] }, async ({ customerClient }) => {
     allure.epic('Customer API');
     allure.feature('Validate ID');
     allure.story('Validate ID with Webhook');
@@ -130,9 +130,20 @@ test.describe('IDMission Customer API', () => {
         retries--;
       }
 
-      expect(webhookTriggered, `Webhook was not triggered at ${webhookUrl}`).toBe(true);
+      expect(webhookTriggered, `Webhook should be triggered at ${webhookUrl}`).toBe(true);
       // Optionally log the webhook payload for debugging
-      console.log('Webhook payload received:', webhookPayload);
+      // console.log('Webhook payload received:', webhookPayload);
+
+      // Validate webhook payload
+      expect(webhookPayload).toBeDefined();
+      expect(webhookPayload.Form_Status).toBe('Approved');
+      expect(webhookPayload.Form_Id).toBe(response.data.resultData.verificationResultId);
+      expect(webhookPayload.Form_Data).toBeDefined();
+      expect(webhookPayload.Form_Data.ID_Number).toBe('062015218');
+      expect(webhookPayload.Form_Data.Valid_ID_Number).toBe('Y');
+      expect(webhookPayload.Form_Data.Face_Detected).toBe('Y');
+      expect(webhookPayload.Form_Data.ID_Number_Match_Result).toBe('Matched');
+      expect(webhookPayload.Form_Data.Form_State_Code).toBe('00');
     } finally {
       server.close();
     }
